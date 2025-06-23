@@ -19,24 +19,26 @@ Vagrant.configure("2") do |config|
     arq.vm.disk :disk, name: "disco_adc1", size: "10GB"
     arq.vm.disk :disk, name: "disco_adc2", size: "10GB"
     arq.vm.disk :disk, name: "disco_adc3", size: "10GB"
+    arq.vm.provision "ansible" do |ansible| # arquivo playbook iniciado, mas ainda é necessário diversos ajuste
+      ansible.playbook = "playbooks/playbook.yml"
+    end
   end
+#conf da máquina db  
   config.vm.define "db" do |db|
     db.vm.hostname = "db.lucas.devops"
     db.vm.network  "private_network", type: "dhcp"
+#conf da máquina app
   end
   config.vm.define "app" do |app|
     app.vm.hostname = "app.lucas.devops"
     app.vm.network "private_network", type: "dhcp"
+#conf da máquina cliente
   end
   config.vm.define "cli" do |cli|
-   # cli.vm.memory = 1024
     cli.vm.network "private_network", type: "dhcp"
     cli.vm.hostname = "cli.lucas.devops"
+    cli.vm.provider "virtualbox" do |vb| # checar se de fato a configuração de memória foi sobrescrita
+      vb.memory = 1024
+    end
   end
-  # Enable provisioning with a shell script. Additional provisioners such as
-  # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
-  # documentation for more information about their specific syntax and use.
-   config.vm.provision "shell", inline: <<-SHELL
-     apt-get update && apt-get upgrade
-     SHELL
 end
