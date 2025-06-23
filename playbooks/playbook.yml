@@ -1,0 +1,10 @@
+---
+- hosts: hosts
+  become: yes
+
+  task:
+   - name: Atualizando pacotes
+     apt-get: name=update 
+      
+
+  
