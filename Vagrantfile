@@ -5,8 +5,8 @@ Vagrant.configure("2") do |config|
   #configuração de todas as máquinas
   config.vm.box = "debian/bookworm64"
   config.ssh.insert_key = false
-  config.vm.synced_folder "." "/vagrant", disabled:true,  SharedFoldersEnableSymlinksCreate: false
-   config.vm.provider "virtualbox" do |vb|
+  config.vm.synced_folder "." "/vagrant", disabled:true   
+  config.vm.provider "virtualbox" do |vb|
     vb.gui = false
     vb.memory = 512
     vb.linked_clone = true
@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
     arq.vm.disk :disk, name: "disco_adc2", size: "10GB"
     arq.vm.disk :disk, name: "disco_adc3", size: "10GB"
     arq.vm.provision "ansible" do |ansible| # arquivo playbook iniciado, mas ainda é necessário diversos ajuste
-      ansible.playbook = "playbooks/playbook.yml"
+      ansible.playbook = "playbook.yml"
     end
   end
 #conf da máquina db  
