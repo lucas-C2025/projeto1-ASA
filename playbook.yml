@@ -21,7 +21,7 @@
           update_cache: yes
           state: present
 
-- name: Instalando chronyd
+- name: Instalando chronyd, ativando e ajustando horários
   hosts: arq 
   become: true
 
@@ -41,4 +41,9 @@
     - name: Ajustando o fuso horário
       community.general.timezone:
         name: America/Recife
-   
+
+          #- name: Adicionando grupos e usuários
+          # hosts: arq
+          # task:
+          # addgroup: 
+          #name: "ifpb"  
