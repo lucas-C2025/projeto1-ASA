@@ -1,0 +1,136 @@
+- name: Configurar servidor SSH
+  hosts: arq
+  become: true
+
+  vars:
+    usuarios: 
+      - lucas1
+      - pedro2
+    grupos_permitidos:
+      - vagrant
+      - ifpb
+    mensagem_ssh: |
+      Acesso apenas para pessoas com autorização expressa.
+      Seu acesso está sendo monitorado !!!
+       
+
+
+  tasks:
+
+    - name: Criar grupos permitidos
+      group:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ grupos_permitidos }}"
+
+    - name: Criar usuários e adicionar aos grupos
+      user:
+        name: "{{ item }}"
+        group: ifpb      
+      loop: "{{ usuarios }}"
+
+    - name: Configura sudo para o grupo 'ifpb'
+      copy:
+        dest: /etc/sudoers.d/ifpb
+        content: "%ifpb ALL=(ALL) NOPASSWD:ALL\n"
+        owner: root
+        group: root
+        mode: '0440'
+
+    - name: Criar diretório .ssh nos homes dos usuários
+      file:
+        path: "/home/{{ item }}/.ssh"
+        state: directory
+        owner: "{{ item }}"
+        group: ifpb
+        mode: '0700'
+      loop: "{{ usuarios }}"
+
+    - name: Gerar chave pública para os usuários
+      openssh_keypair:
+        path: "/home/{{ item }}/.ssh/id_rsa"
+        owner: "{{ item }}"
+        group: ifpb
+        mode: '0600'
+      loop: "{{ usuarios }}"
+
+    - name: Copiar chave pública para authorized_keys
+      copy:
+        src: "/home/{{ item }}/.ssh/id_rsa.pub"
+        dest: "/home/{{ item }}/.ssh/authorized_keys"
+        owner: "{{ item }}"
+        group: ifpb
+        mode: '0600'
+        remote_src: yes
+      loop: "{{ usuarios }}"
+
+    - name: Bloquear acesso root via SSH
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogin'
+        line: 'PermitRootLogin no'
+        create: yes
+
+    - name: Permitir apenas autenticação por chave pública
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PasswordAuthentication'
+        line: 'PasswordAuthentication no'
+        create: yes
+
+    - name: Restringir acesso SSH apenas a grupos permitidos
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^AllowGroups'
+        line: "AllowGroups {{ grupos_permitidos | join(' ') }}"
+        create: yes
+
+    - name: Criar mensagem de boas-vindas (banner SSH)
+      copy:
+        content: "{{ mensagem_ssh }}"
+        dest: /etc/issue.net
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Habilita uso do banner no sshd_config
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^Banner'
+        line: 'Banner /etc/issue.net'
+        create: yes
+
+    - name: Habilita uso de chaves públicas
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PubkeyAuthentication'
+        line: 'PubkeyAuthentication yes'
+        create: yes
+
+    - name: Habilita o uso de chaves autorizadas
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^AuthorizedKeysFile'
+        line: 'AuthorizedKeysFile .ssh/authorized_keys'
+        create: yes
+
+    - name: Copiar chave pública gerada no cliente
+      copy:
+        src: ~/.ssh/id_lucas1_arq.pub
+        dest: /home/lucas1/.ssh/authorized_keys
+        owner: lucas1
+        group: ifpb
+        mode: '0600'
+
+
+    - name: Reiniciar o serviço SSH
+      service:
+        name: ssh
+        state: restarted
+
+    - name: instala NFS
+      apt:
+        name: nfs-client 
+        state: present
+
+

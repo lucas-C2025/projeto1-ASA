@@ -1,0 +1,34 @@
+---
+- name: Atualizando pacotes
+  hosts: arq
+  become: true
+
+  tasks:
+
+    - name: Atualizando comando apt
+      apt:
+        update_cache: yes
+        upgrade: no
+
+    - name: Instalando vim
+      apt:
+        name: vim
+        update_cache: yes
+        state: present
+
+    - name: Instalando Chrony
+      apt:
+        name: chrony
+        update_cache: yes
+        state: present
+
+    - name: Ativando o serviço.
+      service:
+        name: chronyd
+        state: started
+        enabled: yes
+
+    - name: Ajustando o fuso horário
+      community.general.timezone:
+        name: America/Recife
+
