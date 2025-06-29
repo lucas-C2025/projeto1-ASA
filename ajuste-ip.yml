@@ -1,0 +1,23 @@
+---
+
+- name: Configurações
+  hosts: db, app 
+  become: true
+ 
+  tasks:
+
+    - name: Pegando o MAC
+      script: ~/ifpb/asa/projeto1-ASA/scripts/pega_mac.sh
+
+    - name: Buscando o arquivo gerado com MAC address
+      fetch:
+        src: "/root/{{ inventory_hostname }}_mac"
+        dest: "~/ifpb/asa/projeto1-ASA/mac-coletados/"
+        flat: yes
+
+    - name: Verificando hostname
+      debug:
+        msg: "O nome do host é {{ inventory_hostname }}"
+
+
+   

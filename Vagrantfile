@@ -20,18 +20,18 @@ Vagrant.configure("2") do |config|
     arq.vm.disk :disk, name: "disco_adc2", size: "10GB"
     arq.vm.disk :disk, name: "disco_adc3", size: "10GB"
     arq.vm.provision "ansible" do |ansible| # arquivo playbook iniciado, mas ainda é necessário diversos ajuste
-      ansible.playbook = "playbook.yml"
+      ansible.playbook = "arq-conf-dhcp.yml"
     end
   end
 #conf da máquina db  
   config.vm.define "db" do |db|
     db.vm.hostname = "db.lucas1.pedro2.devops"
-    db.vm.network  "private_network", type: "dhcp"
+    db.vm.network  "private_network", type: "dhcp", mac: "080027AACCDD"
 #conf da máquina app
   end
   config.vm.define "app" do |app|
     app.vm.hostname = "app.lucas1.pedro2.devops"
-    app.vm.network "private_network", type: "dhcp"
+    app.vm.network "private_network", type: "dhcp", mac: "080027AADDCC"
 #conf da máquina cliente
   end
   config.vm.define "cli" do |cli|
@@ -40,5 +40,12 @@ Vagrant.configure("2") do |config|
     cli.vm.provider "virtualbox" do |vb| # checar se de fato a configuração de memória foi sobrescrita
       vb.memory = 1024
     end
+  end
+  # provisionamento das máquinas geral
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "config-geral.yml"
+  end
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "users-ssh-nfs.yml"
   end
 end

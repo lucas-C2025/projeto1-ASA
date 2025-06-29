@@ -1,6 +1,6 @@
 ---
 - name: Atualizando pacotes
-  hosts: arq
+  hosts: all 
   become: true
 
   tasks:

@@ -1,5 +1,5 @@
 - name: Configurar servidor SSH
-  hosts: arq
+  hosts: all 
   become: true
 
   vars:
