@@ -1,6 +1,6 @@
 # Projeto1-ASA
 ### Objetivo do trabalho: 
-\nProvisionar uma infraestrutura virtual e automatizar a configuração do sistema operacional e de serviços essenciais, usando Vagrant e Ansible.
+Provisionar uma infraestrutura virtual e automatizar a configuração do sistema operacional e de serviços essenciais, usando Vagrant e Ansible.
 
 **Integrantes da equipe:**
 Lucas dos Santos Carvalho e Pedro Weverton Barbosa
