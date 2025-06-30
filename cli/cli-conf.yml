@@ -1,0 +1,65 @@
+---
+- name: Configurar VM cli
+  hosts: cli
+  become: yes
+  vars:
+    nfs_server_ip: 192.168.56.107  # IP do servidor NFS (arq)
+
+  tasks:
+    - name: Instalar Firefox e xauth
+      apt:
+        name:
+          - firefox-esr
+          - xauth
+        state: present
+        update_cache: yes
+
+    - name: Garantir que o OpenSSH Server está instalado
+      apt:
+        name: openssh-server
+        state: present
+
+    - name: Permitir o encaminhamento X11 no SSH
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?X11Forwarding'
+        line: 'X11Forwarding yes'
+        state: present
+        backup: yes
+
+    - name: (Opcional) Garantir que X11UseLocalhost está habilitado corretamente
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?X11UseLocalhost'
+        line: 'X11UseLocalhost no'
+        state: present
+
+    - name: Reiniciar o serviço SSH para aplicar alterações
+      service:
+        name: ssh
+        state: restarted
+        enabled: true
+
+    - name: Instalar o serviço autofs
+      apt:
+        name: autofs
+        state: present
+
+    - name: Configurar auto.master
+      copy:
+        dest: /etc/auto.master
+        content: |
+          /var/nfs  /etc/auto.nfs
+
+    - name: Configurar auto.nfs para montar compartilhamento do servidor arq
+      copy:
+        dest: /etc/auto.nfs
+        content: |
+          dados  -rw,sync  {{ nfs_server_ip }}:/dados/nfs
+
+    - name: Reiniciar o serviço autofs
+      service:
+        name: autofs
+        state: restarted
+        enabled: true
+

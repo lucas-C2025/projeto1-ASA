@@ -1,0 +1,39 @@
+---
+- name: Configurar a máquina db com MariaDB e montagem NFS via autofs
+  hosts: db
+  become: true
+
+  vars:
+    nfs_server_ip: 192.168.56.107 
+
+  tasks:
+    - name: Instalar o MariaDB Server
+      apt:      
+        name: mariadb-server
+        update_cache: yes
+        state: present
+
+    - name: Instalar o serviço autofs
+      apt:
+        name: autofs
+        update_cache: yes
+        state: present
+
+    - name: Configurar auto.master
+      copy:
+        dest: /etc/auto.master
+        content: |
+          /var/nfs  /etc/auto.nfs
+
+    - name: Configurar auto.nfs para montar compartilhamento NFS do arq
+      copy:
+        dest: /etc/auto.nfs
+        content: |
+          dados  -rw,sync  {{ nfs_server_ip }}:/dados/nfs
+
+    - name: Reiniciar o serviço autofs
+      service:
+        name: autofs
+        state: restarted
+        enabled: true
+

@@ -19,33 +19,42 @@ Vagrant.configure("2") do |config|
     arq.vm.disk :disk, name: "disco_adc1", size: "10GB"
     arq.vm.disk :disk, name: "disco_adc2", size: "10GB"
     arq.vm.disk :disk, name: "disco_adc3", size: "10GB"
-    arq.vm.provision "ansible" do |ansible| # arquivo playbook iniciado, mas ainda é necessário diversos ajuste
-      ansible.playbook = "arq-conf-dhcp.yml"
+    arq.vm.provision "ansible" do |ansible|
+      ansible.playbook = "arq/arq-conf.yml"
     end
   end
 #conf da máquina db  
   config.vm.define "db" do |db|
     db.vm.hostname = "db.lucas1.pedro2.devops"
     db.vm.network  "private_network", type: "dhcp", mac: "080027AACCDD"
-#conf da máquina app
+    db.vm.provision "ansible" do |ansible|
+      ansible.playbook = "db/db-conf.yml"
+    end
   end
+#conf da máquina app
   config.vm.define "app" do |app|
     app.vm.hostname = "app.lucas1.pedro2.devops"
     app.vm.network "private_network", type: "dhcp", mac: "080027AADDCC"
-#conf da máquina cliente
+    app.vm.provision "ansible" do |ansible|
+      ansible.playbook = "app/app-conf.yml"
+    end
   end
+#conf da máquina cliente
   config.vm.define "cli" do |cli|
     cli.vm.network "private_network", type: "dhcp"
     cli.vm.hostname = "cli.lucas1.pedro2.devops"
-    cli.vm.provider "virtualbox" do |vb| # checar se de fato a configuração de memória foi sobrescrita
+    cli.vm.provider "virtualbox" do |vb|
       vb.memory = 1024
+    end
+    cli.vm.provision "ansible" do |ansible|
+      ansible.playbook = "cli/cli-conf.yml"
     end
   end
   # provisionamento das máquinas geral
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "config-geral.yml"
+    ansible.playbook = "geral/config-geral.yml"
   end
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "users-ssh-nfs.yml"
+    ansible.playbook = "geral/config2-geral.yml"
   end
 end

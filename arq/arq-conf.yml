@@ -1,0 +1,140 @@
+---
+- name: Instala e configura servidor dhcp.
+  hosts: arq
+  become: true
+
+  vars:
+    dhcp_name_pack:
+      "Debian": isc-dhcp-server
+      "RedHat": dhcp
+    dhcp_name_serv:
+      "Debian": isc-dhcp-server
+      "RedHat": dhcpd
+
+  handlers:
+    - name: restart dhcp
+      service:
+        name: "{{ dhcp_name_serv[ansible_os_family] }}"
+        state: restarted
+
+  tasks:
+    - name: Instala o servidor dhcp.
+      package:
+        name: "{{ dhcp_name_pack[ansible_os_family] }}"
+        update_cache: yes
+        state: present
+
+    - name: Copia o arquivo de configuração dhcp.
+      copy:
+        src: "dhcpd.conf"
+        dest: "/etc/dhcp/dhcpd.conf"
+        mode: '0664'
+      notify: restart dhcp
+
+    - name: Habilita o serviço do dhcp.
+      service:
+        name: "{{ dhcp_name_serv[ansible_os_family] }}"
+        enabled: yes
+
+    - name: Ajusta a configuração default do dhcp.
+      lineinfile:
+        dest: "/etc/default/{{ dhcp_name_serv[ansible_os_family] }}"
+        regexp: "^INTERFACESv4"
+        line: 'INTERFACESv4="eth1"'
+        state: present
+      notify: restart dhcp
+
+    - name: Instalar o pacote LVM
+      package:
+        name: lvm2
+        state: present
+
+    - name: Criar Physical Volume em /dev/sdb
+      command: pvcreate /dev/sdb
+      args:
+        creates: /dev/sdb
+
+    - name: Criar Physical Volume em /dev/sdc
+      command: pvcreate /dev/sdc
+      args:
+        creates: /dev/sdc
+
+    - name: Criar Physical Volume em /dev/sdd
+      command: pvcreate /dev/sdd
+      args:
+        creates: /dev/sdd
+
+    - name: Criar Volume Group 'dados'
+      command: vgcreate dados /dev/sdb /dev/sdc /dev/sdd
+      args:
+        creates: /dev/dados
+
+    - name: Criar Logical Volume 'ifpb' com 15GB no VG 'dados'
+      command: lvcreate -n ifpb -L 15G dados
+      args:
+        creates: /dev/dados/ifpb
+
+    - name: Formatar o LV 'ifpb' com ext4
+      filesystem:
+        fstype: ext4
+        dev: /dev/dados/ifpb
+
+    - name: Criar o ponto de montagem /dados
+      file:
+        path: /dados
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Adicionar entrada no /etc/fstab
+      mount:
+        path: /dados
+        src: /dev/dados/ifpb
+        fstype: ext4
+        opts: defaults
+        state: mounted
+
+    - name: Instalar o servidor NFS
+      package:
+        name: nfs-kernel-server
+        state: present
+
+    - name: Criar usuário nfs-ifpb sem shell
+      user:
+        name: nfs-ifpb
+        shell: /usr/sbin/nologin
+        create_home: yes
+        state: present
+
+    - name: Obter UID do usuário nfs-ifpb
+      command: id -u nfs-ifpb
+      register: nfs_uid_result
+
+    - name: Obter GID do usuário nfs-ifpb
+      command: id -g nfs-ifpb
+      register: nfs_gid_result
+
+    - name: Criar diretório /dados/nfs
+      file:
+        path: /dados/nfs
+        state: directory
+        owner: nfs-ifpb
+        group: nfs-ifpb
+        mode: '0750'
+
+    - name: Configurar exportação NFS para /dados/nfs
+      copy:
+        dest: /etc/exports
+        content: |
+          /dados/nfs 192.168.56.0/24(rw,sync,no_subtree_check,anonuid={{ nfs_uid_result.stdout }},anongid={{ nfs_gid_result.stdout }})
+
+    - name: Reiniciar o serviço NFS
+      service:
+        name: nfs-kernel-server
+        state: restarted
+        enabled: true
+
+    - name: Exportar as configurações NFS
+      command: exportfs -rav
+
