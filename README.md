@@ -59,6 +59,7 @@ E utilize o comando firefox para exibir a página web:
 por fim acesse a página do apache2 no navegador:
     http://192.168.56.170
 ```
+## Referencias
 
 abaixo temos apenas alguns links e informações que foram usadas durante o processo de criação do trabalho
 
