@@ -34,36 +34,36 @@ Leônidas Francisco de Lima Júnior
 ```
 ### Como Usar
 
-###### 1.Para executar os arquivos realize um git clone do repositório, ex:
+##### 1.Para executar os arquivos realize um git clone do repositório, ex:
 ```
 git clone https://github.com/lucas-C2025/projeto1-ASA.git
 ```
-###### 2.Após clonar execute o comando para iniciar as máquinas, esse processo levará algum tempo pois será feito todo o provisionamento de cada uma das vms, ex do comando:
+##### 2.Após clonar execute o comando para iniciar as máquinas, esse processo levará algum tempo pois será feito todo o provisionamento de cada uma das vms, ex do comando:
 ```
 vagrant up
 ```
-###### 3.Após isso para que as vms designadas obtenham os endereços ips do servidor dhcp vai ser preciso desativar a interface do virtualbox, para checar os servidores dhcp sendo usados use:
+##### 3.Após isso para que as vms designadas obtenham os endereços ips do servidor dhcp vai ser preciso desativar a interface do virtualbox, para checar os servidores dhcp sendo usados use:
 ```
 VBoxManage list dhcpservers
 ```
-###### 4.Em seguida, substituindo os cambos 'vboxnet1' ou 'HostInterfaceNetworking-vboxnet1' pelo que foi exibido na lista dhcp anterior, use:
+##### 4.Em seguida, substituindo os cambos 'vboxnet1' ou 'HostInterfaceNetworking-vboxnet1' pelo que foi exibido na lista dhcp anterior, use:
 ```
 VBoxManage dhcpserver remove --interface vboxnet1  
 VBoxManage dhcpserver remove --netname HostInterfaceNetworking-vboxnet1
 ```
-###### 5.Após isso reinice as máquinas db, app e cli, ex:
+##### 5.Após isso reinice as máquinas db, app e cli, ex:
 ```
 vagrant reload db app cli
 ```
-###### 6.E para exibir a página web com as informações acesse a máquina cli via ssh com a opção -X, ex:
+##### 6.E para exibir a página web com as informações acesse a máquina cli via ssh com a opção -X, ex:
 ```
 ssh -X lucas1@192.168.56.50
 ```
-###### 7.E utilize o comando firefox para exibir a página web:
+##### 7.E utilize o comando firefox para exibir a página web:
 ```
 firefox
 ```
-###### 8.por fim acesse a página do apache2 no navegador:
+##### 8.por fim acesse a página do apache2 no navegador:
 ```    
 http://192.168.56.170
 ```
