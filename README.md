@@ -18,8 +18,8 @@
       |db/virtualbox/
    |provisioners/ansible/inventory/
    |rgloader/
-|app/                > [!NOTE]    
-|arq/                >Os diretórios 'arq, db, app e cli', correspondem as máquinas virtuais que serão criadas e contido em cada um desses diretórios está o playbook correspondente.
+|app/   
+|arq/
 |cli/
 |db/
 |geral/
