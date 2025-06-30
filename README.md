@@ -20,25 +20,20 @@ Leônidas Francisco de Lima Júnior
       |db/virtualbox/
    |provisioners/ansible/inventory/
    |rgloader/
-|app/   
-|arq/
-|cli/
-|db/
-|geral/
-|n-usados/
+|app/            #correspondem as máquinas virtuais que serão criadas e contido em cada um desses diretórios está o playbook correspondente.
+|arq/            #correspondem as máquinas virtuais que serão criadas e contido em cada um desses diretórios está o playbook correspondente.
+|cli/            #correspondem as máquinas virtuais que serão criadas e contido em cada um desses diretórios está o playbook correspondente.
+|db/             #correspondem as máquinas virtuais que serão criadas e contido em cada um desses diretórios está o playbook correspondente.
+|geral/          #corresponde as configurações gerais 
+|n-usados/       #corresponde a arquivos que foram criados durante o processo criativo para execução dessa atividade mas que acabaram por não ser efetivamente usados na execução ficando apenas para registro.
    |scrpits/
 |README.md
-|Vagrantfile
-|ansible.cfg
-|hosts.ini
+|Vagrantfile      #são os que são necessários para execução do processo.
+|ansible.cfg      #são os que são necessários para execução do processo.
+|hosts.ini        #são os que são necessários para execução do processo.
 ```
-
-Os diretórios 'arq, db, app e cli', correspondem as máquinas virtuais que serão criadas e contido em cada um desses diretórios está o playbook correspondente.
-
-O diretório 'geral' corresponde as configurações gerais e o 'n-usados' a arquivos que foram criados durante o processo criativo para execução dessa atividade mas que acabaram por não ser efetivamente usados na execução ficando apenas para registro.
-
-Os arquivos restantes são os que são necessários para execução do processo.
-
+### Como Usar
+```
 Para executar os arquivos realize um git clone do repositório, ex:
     git clone https://github.com/lucas-C2025/projeto1-ASA.git
 
@@ -63,7 +58,7 @@ E utilize o comando firefox para exibir a página web:
 
 por fim acesse a página do apache2 no navegador:
     http://192.168.56.170
-
+```
 
 abaixo temos apenas alguns links e informações que foram usadas durante o processo de criação do trabalho
 
