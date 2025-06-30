@@ -2,14 +2,11 @@
 #### Objetivo do trabalho: Provisionar uma infraestrutura virtual e automatizar a configuração do sistema operacional e de serviços essenciais, usando Vagrant e Ansible.
 
 **Integrantes da equipe:**
->Lucas dos Santos Carvalho e Pedro Weverton Barbosa
->
+Lucas dos Santos Carvalho e Pedro Weverton Barbosa
 **Disciplina:**
->Administração de Sistemas Abertos
->
+Administração de Sistemas Abertos
 **Professor:**
->Leônidas Francisco de Lima Júnior
->
+Leônidas Francisco de Lima Júnior
 ### Estrutura do Projeto
 ```
 |.vagrant/
