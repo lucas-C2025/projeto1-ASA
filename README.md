@@ -3,10 +3,13 @@
 
 **Integrantes da equipe:**
 Lucas dos Santos Carvalho e Pedro Weverton Barbosa
+
 **Disciplina:**
 Administração de Sistemas Abertos
+
 **Professor:**
 Leônidas Francisco de Lima Júnior
+
 ### Estrutura do Projeto
 ```
 |.vagrant/
