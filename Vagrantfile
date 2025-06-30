@@ -15,6 +15,7 @@ Vagrant.configure("2") do |config|
 #conf da máquina arq
   config.vm.define "arq" do |arq|
     arq.vm.hostname = "arq.lucas1.pedro2.devops"
+    arq.vm.network "private_network", type: "dhcp", auto_config: false
     arq.vm.network "private_network", ip: "192.168.56.107"
     arq.vm.disk :disk, name: "disco_adc1", size: "10GB"
     arq.vm.disk :disk, name: "disco_adc2", size: "10GB"
@@ -26,7 +27,7 @@ Vagrant.configure("2") do |config|
 #conf da máquina db  
   config.vm.define "db" do |db|
     db.vm.hostname = "db.lucas1.pedro2.devops"
-    db.vm.network  "private_network", type: "dhcp", mac: "080027AACCDD"
+    db.vm.network  "private_network", type: "dhcp", mac: "080027AACCDD", auto_config: false
     db.vm.provision "ansible" do |ansible|
       ansible.playbook = "db/db-conf.yml"
     end
@@ -34,14 +35,14 @@ Vagrant.configure("2") do |config|
 #conf da máquina app
   config.vm.define "app" do |app|
     app.vm.hostname = "app.lucas1.pedro2.devops"
-    app.vm.network "private_network", type: "dhcp", mac: "080027AADDCC"
+    app.vm.network "private_network", type: "dhcp", mac: "080027AADDCC", auto_config: false
     app.vm.provision "ansible" do |ansible|
       ansible.playbook = "app/app-conf.yml"
     end
   end
 #conf da máquina cliente
   config.vm.define "cli" do |cli|
-    cli.vm.network "private_network", type: "dhcp"
+    cli.vm.network "private_network", type: "dhcp", auto_config: false
     cli.vm.hostname = "cli.lucas1.pedro2.devops"
     cli.vm.provider "virtualbox" do |vb|
       vb.memory = 1024
