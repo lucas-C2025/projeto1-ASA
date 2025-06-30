@@ -9,7 +9,7 @@
     >Leônidas Francisco de Lima Júnior
 
 ### Estrutura do Projeto
-´´´´
+```
 |.vagrant/
    |machine/
       |app/virtualbox/
@@ -29,7 +29,7 @@
 |Vagrantfile
 |ansible.cfg
 |hosts.ini
-´´´´
+```
 
 Os diretórios 'arq, db, app e cli', correspondem as máquinas virtuais que serão criadas e contido em cada um desses diretórios está o playbook correspondente.
 
