@@ -1,12 +1,35 @@
 # Projeto1-ASA
-Objetivo do trabalho: Provisionar uma infraestrutura virtual e automatizar a configuração do sistema operacional e de serviços essenciais, usando Vagrant e Ansible.
+#### Objetivo do trabalho: Provisionar uma infraestrutura virtual e automatizar a configuração do sistema operacional e de serviços essenciais, usando Vagrant e Ansible.
 
-Integrantes da equipe:
-    Lucas dos Santos Carvalho e Pedro Weverton Barbosa
-Disciplina:
-    Administração de Sistemas Abertos
-Professor:
-    Leônidas Francisco de Lima Júnior
+**Integrantes da equipe:**
+    >Lucas dos Santos Carvalho e Pedro Weverton Barbosa
+**Disciplina:**
+    >Administração de Sistemas Abertos
+**Professor:**
+    >Leônidas Francisco de Lima Júnior
+
+### Estrutura do Projeto
+''''
+|.vagrant/
+   |machine/
+      |app/virtualbox/
+      |arq/virtualbox/
+      |cli/virtualbox/
+      |db/virtualbox/
+   |provisioners/ansible/inventory/
+   |rgloader/
+|app/                > [!NOTE]    
+|arq/                >Os diretórios 'arq, db, app e cli', correspondem as máquinas virtuais que serão criadas e contido em cada um desses diretórios está o playbook correspondente.
+|cli/
+|db/
+|geral/
+|n-usados/
+   |scrpits/
+|README.md
+|Vagrantfile
+|ansible.cfg
+|hosts.ini
+''''
 
 Os diretórios 'arq, db, app e cli', correspondem as máquinas virtuais que serão criadas e contido em cada um desses diretórios está o playbook correspondente.
 
