@@ -5,6 +5,9 @@ Vagrant.configure("2") do |config|
   #configuração de todas as máquinas
   config.vm.box = "debian/bookworm64"
   config.ssh.insert_key = false
+  if Vagrant.has_plugin?("vagrant-vbguest")
+    config.vbguest.auto_update = false
+    end
   config.vm.synced_folder "." "/vagrant", disabled:true   
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
@@ -15,8 +18,7 @@ Vagrant.configure("2") do |config|
 #conf da máquina arq
   config.vm.define "arq" do |arq|
     arq.vm.hostname = "arq.lucas1.pedro2.devops"
-    arq.vm.network "private_network", type: "dhcp", auto_config: false
-    arq.vm.network "private_network", ip: "192.168.56.107"
+    arq.vm.network "private_network", ip: "192.168.56.107" 
     arq.vm.disk :disk, name: "disco_adc1", size: "10GB"
     arq.vm.disk :disk, name: "disco_adc2", size: "10GB"
     arq.vm.disk :disk, name: "disco_adc3", size: "10GB"
@@ -27,7 +29,7 @@ Vagrant.configure("2") do |config|
 #conf da máquina db  
   config.vm.define "db" do |db|
     db.vm.hostname = "db.lucas1.pedro2.devops"
-    db.vm.network  "private_network", type: "dhcp", mac: "080027AACCDD", auto_config: false
+    db.vm.network  "private_network", type: "dhcp", mac: "080027AACCDD"
     db.vm.provision "ansible" do |ansible|
       ansible.playbook = "db/db-conf.yml"
     end
@@ -35,14 +37,15 @@ Vagrant.configure("2") do |config|
 #conf da máquina app
   config.vm.define "app" do |app|
     app.vm.hostname = "app.lucas1.pedro2.devops"
-    app.vm.network "private_network", type: "dhcp", mac: "080027AADDCC", auto_config: false
+    app.vm.network "private_network", type: "dhcp", mac: "080027AADDCC"
+
     app.vm.provision "ansible" do |ansible|
       ansible.playbook = "app/app-conf.yml"
     end
   end
 #conf da máquina cliente
   config.vm.define "cli" do |cli|
-    cli.vm.network "private_network", type: "dhcp", auto_config: false
+    cli.vm.network "private_network", type: "dhcp"
     cli.vm.hostname = "cli.lucas1.pedro2.devops"
     cli.vm.provider "virtualbox" do |vb|
       vb.memory = 1024

@@ -114,13 +114,22 @@
         line: 'AuthorizedKeysFile .ssh/authorized_keys'
         create: yes
 
-#    - name: Copiar chave pública gerada no cliente
- #     copy:
-  #      src: ~/.ssh/id_lucas1_arq.pub
-   #     dest: /home/lucas1/.ssh/authorized_keys
-    #    owner: lucas1
-     #   group: ifpb
-      #  mode: '0600'
+    - name: Copiar chave pública gerada no cliente
+      copy:
+        src: ~/.ssh/id_lucas1_arq.pub
+        dest: /home/lucas1/.ssh/authorized_keys
+        owner: lucas1
+        group: ifpb
+        mode: '0600'
+
+    - name: Copiar chave pública gerada no cliente
+      copy:
+        src: ~/.ssh/id_pedro2_arq.pub
+        dest: /home/pedro2/.ssh/authorized_keys
+        owner: pedro2
+        group: ifpb
+        mode: '0600'
+
 
 
     - name: Reiniciar o serviço SSH
