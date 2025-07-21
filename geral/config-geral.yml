@@ -8,7 +8,7 @@
     - name: Atualizando comando apt
       apt:
         update_cache: yes
-        upgrade: no
+        upgrade: yes 
 
     - name: Instalando vim
       apt:

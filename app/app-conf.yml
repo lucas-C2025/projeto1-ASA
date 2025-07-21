@@ -2,14 +2,6 @@
 - name: Configurar servidor web na VM app
   hosts: app
   become: yes
-  vars:
-    nfs_server_ip: 192.168.56.107   # IP do servidor NFS (arq)
-    projeto_descricao: "Sistema de Compartilhamento de Arquivos via NFS"
-    equipe_integrantes: |
-      <ul>
-        <li>Nome: Lucas dos Santos Carvalho - Matrícula: 20222380007</li>
-        <li>Nome: Pedro Weverton Barbosa - Matrícula: 20222380020</li>
-      </ul>
 
   tasks:
     - name: Instalar o servidor Apache2
@@ -26,9 +18,12 @@
               <title>Projeto NFS - Equipe</title>
             </head>
             <body>
-              <h1>{{ projeto_descricao }}</h1>
+              <h1>Sistema de Compartilhamento de Arquivo via NFS</h1>
               <h2>Integrantes da Equipe</h2>
-              {{ equipe_integrantes }}
+              <ul>
+             <li> Lucas dos Santos Carvalho - Matrícula: 20222380007</li>
+             <li> Pedro Weverton Barbosa - Matrícula: 20222380020</li>
+             </ul>
             </body>
           </html>
         mode: '0644'
@@ -56,7 +51,7 @@
       copy:
         dest: /etc/auto.nfs
         content: |
-          dados  -rw,sync  {{ nfs_server_ip }}:/dados/nfs
+          dados  -rw,sync  192.168.56.107:/dados/nfs
 
     - name: Reiniciar o serviço autofs
       service:

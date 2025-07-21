@@ -3,9 +3,6 @@
   hosts: db
   become: true
 
-  vars:
-    nfs_server_ip: 192.168.56.107 
-
   tasks:
     - name: Instalar o MariaDB Server
       apt:      
@@ -29,7 +26,7 @@
       copy:
         dest: /etc/auto.nfs
         content: |
-          dados  -rw,sync  {{ nfs_server_ip }}:/dados/nfs
+          dados  -rw,sync  192.168.56.107:/dados/nfs
 
     - name: Reiniciar o serviço autofs
       service:

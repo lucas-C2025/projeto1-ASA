@@ -27,7 +27,7 @@
         state: present
         backup: yes
 
-    - name: (Opcional) Garantir que X11UseLocalhost está habilitado corretamente
+    - name: Garantir que X11UseLocalhost está habilitado corretamente
       lineinfile:
         path: /etc/ssh/sshd_config
         regexp: '^#?X11UseLocalhost'
@@ -55,7 +55,7 @@
       copy:
         dest: /etc/auto.nfs
         content: |
-          dados  -rw,sync  {{ nfs_server_ip }}:/dados/nfs
+          dados  -rw,sync  192.168.56.107:/dados/nfs
 
     - name: Reiniciar o serviço autofs
       service:
