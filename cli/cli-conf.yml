@@ -65,4 +65,4 @@
 
     - name: Testar montagem manual (opcional)
       command: mount -t nfs 192.168.56.107:/dados/nfs /mnt
-      when: true  # Alterar para true se quiser testar montagem manual
+      when: false
