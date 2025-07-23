@@ -14,6 +14,10 @@ Vagrant.configure("2") do |config|
     vb.memory = 512
     vb.linked_clone = true
     vb.check_guest_additions = false
+  config.trigger.before :"Vagrant::Action::Builtin::WaitForCommunicator", type: :action do |t|
+    t.warn ="Interrompe o servidor dhcp do virtualbox"
+    t.run = {inline: "vboxmanage dhcpserver stop --interface vboxnet0"}
+  end
    end
 #conf da máquina arq
   config.vm.define "arq" do |arq|

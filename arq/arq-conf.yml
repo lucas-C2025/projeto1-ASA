@@ -10,6 +10,12 @@
     dhcp_name_serv:
       "Debian": isc-dhcp-server
       "RedHat": dhcpd
+  tasks:
+    - name: Instala o servidor dhcp.
+      package:
+        name: "{{ dhcp_name_pack[ansible_os_family] }}"
+        update_cache: yes
+        state: present
 
   handlers:
     - name: restart dhcp
@@ -18,12 +24,6 @@
         state: restarted
 
   tasks:
-    - name: Instala o servidor dhcp.
-      package:
-        name: "{{ dhcp_name_pack[ansible_os_family] }}"
-        update_cache: yes
-        state: present
-
     - name: Copia o arquivo de configuração dhcp.
       copy:
         src: "dhcpd.conf"
@@ -115,26 +115,26 @@
       command: id -g nfs-ifpb
       register: nfs_gid_result
 
-    - name: Criar diretório /dados/nfs
+    - name: Garantir permissões corretas no diretório compartilhado
       file:
         path: /dados/nfs
         state: directory
         owner: nfs-ifpb
         group: nfs-ifpb
-        mode: '0750'
+        mode: '0775'  
+        recurse: yes
 
-    - name: Configurar exportação NFS para /dados/nfs
+    - name: Corrigir arquivo /etc/exports
       copy:
         dest: /etc/exports
         content: |
-          /dados/nfs 192.168.56.0/24(rw,sync,no_subtree_check,anonuid={{ nfs_uid_result.stdout }},anongid={{ nfs_gid_result.stdout }})
+          /dados/nfs 192.168.56.0/24(rw,sync,no_root_squash,no_subtree_check,anonuid={{ nfs_uid_result.stdout }},anongid={{ nfs_gid_result.stdout }})
 
-    - name: Reiniciar o serviço NFS
+    - name: carregar exportações NFS
+      command: exportfs -ra
+
+    - name: Reiniciar serviços NFS 
       service:
         name: nfs-kernel-server
         state: restarted
-        enabled: true
-
-    - name: Exportar as configurações NFS
-      command: exportfs -rav
-
+        enabled: yes

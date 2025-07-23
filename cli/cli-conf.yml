@@ -40,26 +40,29 @@
         state: restarted
         enabled: true
 
-    - name: Instalar o serviço autofs
+    - name: Instalar pacotes necessários
       apt:
-        name: autofs
+        name: [nfs-common, autofs]
         state: present
 
-    - name: Configurar auto.master
+    - name: Auto.master
       copy:
         dest: /etc/auto.master
         content: |
-          /var/nfs  /etc/auto.nfs
+          /var/nfs /etc/auto.nfs --timeout=60
 
-    - name: Configurar auto.nfs para montar compartilhamento do servidor arq
+    - name: Auto.nfs
       copy:
         dest: /etc/auto.nfs
         content: |
-          dados  -rw,sync  192.168.56.107:/dados/nfs
+          dados -rw,sync,soft,intr 192.168.56.107:/dados/nfs
 
-    - name: Reiniciar o serviço autofs
+    - name: Reiniciar autofs
       service:
         name: autofs
         state: restarted
-        enabled: true
+        enabled: yes
 
+    - name: Testar montagem manual (opcional)
+      command: mount -t nfs 192.168.56.107:/dados/nfs /mnt
+      when: true  # Alterar para true se quiser testar montagem manual
